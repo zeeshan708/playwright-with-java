@@ -50,7 +50,7 @@ task setReportProperties {
     def service = "ZEE"
     def attributes = "Build:" + System.getProperty("buildId", "") + ";Env:" + System.getProperty("env", "STAGING") + ";SuiteName:" + System.getProperty("suiteType", "regression") + ";Platform:" + System.getProperty("platform", "") + ";Branch:" + System.getProperty("branchName", "master") + ";Execution_Date:" + System.getProperty("executedOn", formattedDate) + ";ReleaseVersion:" + System.getProperty("releaseVersion", releaseVersion) + ";Service:" + System.getProperty("service", service) + ";"
     prop.setProperty('rp.endpoint', "https://practicetestautomation.com/")
-    prop.setProperty('rp.uuid', "0de5266a-d2b8-4579-a66a-f080964cfc72")
+    prop.setProperty('rp.uuid', "")
     prop.setProperty('rp.launch', System.getProperty("launch", 'CustomsUI'))
     prop.setProperty('rp.project', System.getProperty("project", "Customs"))
     prop.setProperty('rp.attributes', System.getProperty("attributes", attributes))
