@@ -23,7 +23,7 @@ stages:
               jdkArchitectureOption: 'x64'
               publishJUnitResults: true
               testResultsFiles: '**/build/test-results/**/*.xml'
-              tasks: 'clean EMCS -Dbrowser=chromium -Dheadless=true -Denv=uat -DreportPortal=enabled'
+              tasks: 'clean ZEE -Dbrowser=chromium -Dheadless=true -Denv=uat -DreportPortal=enabled'
             continueOnError: true
             displayName: Test Execution Regression
 
@@ -52,10 +52,10 @@ stages:
 
           - task: SendGridEmail@2
             inputs:
-              SendGridApiKey: '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'
-              FromAddress: 'admin@customsdev.cargoes.com'
-              ToAddresses: 'Customs.QA@dpworld.com,bhanwar.sharma@dpworld.com'
-              Subject: 'Automation Report - Cargoes Customs-UKCFL'
+              SendGridApiKey: ''
+              FromAddress: ''
+              ToAddresses: ''
+              Subject: ''
               emailBodyFormat: 'File'
               EmailBodyFile: 'build/target/Index.html'
               SendAsHTML: true
