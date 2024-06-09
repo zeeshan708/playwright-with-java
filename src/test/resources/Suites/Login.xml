@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Login Suite" parallel="tests" thread-count="2">
+    <test name="Login" preserve-order="false">
+        <classes>
+            <class name="com.company.automation.e2e.login.LoginTest"/>
+        </classes>
+    </test>
+</suite>

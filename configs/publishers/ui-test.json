@@ -1,0 +1,65 @@
+{
+  "reports": [
+    {
+      "targets": [
+        {
+          "name": "teams",
+          "inputs": {
+            "url": "https://dpworld.webhook.office.com/webhookb2/56eda00a-de5a-47bb-83a7-20ba79ea834c@2bd16c9b-7e21-4274-9c06-7919f7647bbb/IncomingWebhook/4cb9cd5a5a724dd1b6030d5f6b469af0/10b160a7-6489-4a4d-a3c9-93996c35a872"
+          },
+          "extensions": [
+            {
+              "name": "hyperlinks",
+              "inputs": {
+                "links": [
+                  {
+                    "text": "Pipeline",
+                    "url": "{BUILD_URL}"
+                  },
+                  {
+                    "text": "Screenshot",
+                    "url": "{ARTIFACTS_URL}"
+                  },
+                  {
+                    "text": "ReportPortal",
+                    "url": "https://qa-reportportal.dpworld.com/ui/#Customs/launches/all"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "mentions",
+              "inputs": {
+                "schedule": {
+                  "layers": [
+                    {
+                      "rotation": {
+                        "every": "week",
+                        "users": [
+                          {
+                            "name": "CustomsQA",
+                            "teams_upn": "Customs.QA@dpworld.com"
+                          },
+                          {
+                            "name": "Bhanwar Sharma",
+                            "teams_upn": "bhanwar.sharma@dpworld.com"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "type": "testng",
+          "files": ["build/target/testng-results.xml"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+# TestNG reports
+test-output/
+
+# IntelliJ IDEA
+.idea/
+.DS_Store
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
+out/
+report/
+reportportal.properties
+logs/
+*.log
+*.html

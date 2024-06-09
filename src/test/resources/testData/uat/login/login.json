@@ -1,0 +1,12 @@
+[
+  {
+    "testCaseId": "Login-1",
+    "testCaseDescription": "Verify login and redirection to 'Home' page",
+    "errorMessage": ""
+  },
+  {
+    "testCaseId": "Logout-1",
+    "testCaseDescription": "Verify logout",
+    "errorMessage": ""
+  }
+]

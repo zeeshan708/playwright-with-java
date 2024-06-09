@@ -1,0 +1,118 @@
+plugins {
+    id 'java'
+}
+
+group 'com.company.automation'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    implementation 'org.aeonbits.owner:owner:1.0.12'
+    implementation 'com.univocity:univocity-parsers:2.9.1'
+    implementation 'com.aventstack:extentreports:5.0.9'
+    implementation group: 'com.microsoft.playwright', name: 'playwright', version: '1.39.0'
+    implementation 'org.slf4j:slf4j-api:2.0.6'
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.testng:testng:7.4.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.6'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.5'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.5'
+    implementation 'org.json:json:20210307'
+    implementation group: 'com.epam.reportportal', name: 'client-java', version: '5.1.0-RC-7'
+    implementation group: 'com.epam.reportportal', name: 'agent-java-testng', version: '5.1.0-RC-2'
+    implementation group: 'com.epam.reportportal', name: 'logger-java-log4j', version: '5.1.0-RC-1'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
+    implementation 'org.skyscreamer:jsonassert:1.5.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+    implementation 'io.rest-assured:rest-assured:4.3.2'
+    // Apache POI for Excel manipulation
+    implementation 'org.apache.poi:poi:5.2.2'
+    implementation 'org.apache.poi:poi-ooxml:5.2.2'
+}
+
+task setReportProperties {
+    def prop = new Properties()
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd')
+    def releaseVersion = "1.0.0"
+    def service = "ZEE"
+    def attributes = "Build:" + System.getProperty("buildId", "") + ";Env:" + System.getProperty("env", "STAGING") + ";SuiteName:" + System.getProperty("suiteType", "regression") + ";Platform:" + System.getProperty("platform", "") + ";Branch:" + System.getProperty("branchName", "master") + ";Execution_Date:" + System.getProperty("executedOn", formattedDate) + ";ReleaseVersion:" + System.getProperty("releaseVersion", releaseVersion) + ";Service:" + System.getProperty("service", service) + ";"
+    prop.setProperty('rp.endpoint', "https://practicetestautomation.com/")
+    prop.setProperty('rp.uuid', "0de5266a-d2b8-4579-a66a-f080964cfc72")
+    prop.setProperty('rp.launch', System.getProperty("launch", 'CustomsUI'))
+    prop.setProperty('rp.project', System.getProperty("project", "Customs"))
+    prop.setProperty('rp.attributes', System.getProperty("attributes", attributes))
+    prop.setProperty('rp.convertimage', System.getProperty("grayScale", "false"))
+    prop.setProperty('rp.enable', System.getProperty("enable", "true"))
+    prop.setProperty('rp.reporting.async', System.getProperty("reportingAsync", "true"))
+    file('src/test/resources/reportportal.properties').withOutputStream { prop.store(it, null) }
+}
+
+
+tasks.register('ZEE', Test) {
+    systemProperties = System.getProperties() as Map<String, ?>
+    def groups = System.getProperty('groups', 'regression')
+    def thread = System.getProperty('thread', '3')
+
+    useTestNG() {
+        setReportProperties
+        listeners.add("org.testng.reporters.XMLReporter")
+        def reportPortal = System.getProperty("reportPortal", "disabled")
+        println('reportPortal:' + reportPortal)
+        if (reportPortal != null && reportPortal.equals("enabled")) {
+            listeners << 'com.epam.reportportal.testng.ReportPortalTestNGListener'
+        }
+        reports.html.setDestination(file("$buildDir/target"))
+        def dir = System.getProperty("outputDirectory")
+        outputDirectory = dir ? file(dir) : file("$buildDir/target")
+
+        includeGroups groups
+        suites 'src/test/resources/Suites/ZEE.xml'
+        parallel 'tests'
+        threadCount thread as int
+        preserveOrder true
+        testLogging {
+            events "PASSED", "FAILED", "SKIPPED"
+        }
+    }
+}
+tasks.register('ZEE-PREPROD', Test) {
+    systemProperties = System.getProperties() as Map<String, ?>
+    def groups = System.getProperty('groups', 'regression')
+    def thread = System.getProperty('thread', '3')
+
+    useTestNG() {
+        setReportProperties
+        listeners.add("org.testng.reporters.XMLReporter")
+//        listeners.add('com.company.automation.listeners.RetryAnalyzer')
+        def reportPortal = System.getProperty("reportPortal", "disabled")
+        println('reportPortal:' + reportPortal)
+        if (reportPortal != null && reportPortal.equals("enabled")) {
+            listeners << 'com.epam.reportportal.testng.ReportPortalTestNGListener'
+        }
+        reports.html.setDestination(file("$buildDir/target"))
+        def dir = System.getProperty("outputDirectory")
+        outputDirectory = dir ? file(dir) : file("$buildDir/target")
+
+        includeGroups groups
+        suites 'src/test/resources/Suites/ZEE.xml'
+        parallel 'tests'
+        threadCount thread as int
+        preserveOrder true
+        testLogging {
+            events "PASSED", "FAILED", "SKIPPED"
+        }
+    }
+}

@@ -1,0 +1,61 @@
+#trigger:
+#  - master
+trigger: none
+
+stages:
+  - stage: MAC
+    variables:
+      SUITE_NAME: $(test_suite_name)
+    jobs:
+      - job: Job
+        timeoutInMinutes: 210
+        pool:
+          vmImage: macOS-latest
+        steps:
+          - task: Gradle@2
+            inputs:
+              workingDirectory: ''
+              gradleWrapperFile: 'gradlew'
+              gradleOptions: '-Xmx3072m'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+              jdkArchitectureOption: 'x64'
+              publishJUnitResults: true
+              testResultsFiles: '**/build/test-results/**/*.xml'
+              tasks: 'clean EMCS-PREPROD -Dbrowser=chromium -Dheadless=true -Denv=preprod -DreportPortal=enabled'
+            continueOnError: true
+            displayName: Test Execution Regression
+
+          - script: npm install --save-dev test-results-reporter@latest
+          - script: npx test-results-reporter publish -c configs/publishers/ui-test.json
+            continueOnError: true
+            env:
+              BUILD_ID: $(Build.BuildId)
+              BUILD_URL: $(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+            displayName: Reporting Results Teams
+
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: 'report/'
+              artifact: 'Extent Report'
+              publishLocation: 'pipeline'
+            continueOnError: true
+            displayName: Publish Pipeline Artifact
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: 'build/test-results/'
+              ArtifactName: 'TestNG Report'
+              publishLocation: 'Container'
+            displayName: Publish Build Artifact
+
+          - task: SendGridEmail@2
+            inputs:
+              SendGridApiKey: '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'
+              FromAddress: 'admin@customsdev.cargoes.com'
+              ToAddresses: 'Customs.QA@dpworld.com,bhanwar.sharma@dpworld.com'
+              Subject: 'Automation Report - Cargoes Customs-UKCFL'
+              emailBodyFormat: 'File'
+              EmailBodyFile: 'build/target/Index.html'
+              SendAsHTML: true
+
