@@ -39,7 +39,7 @@ playwright-java-framework/
 ├── src/
 │ ├── main/
 │ │ └── java/
-│ │ └──  └── com.dpworld.automtation/
+│ │ └──  └── com.company.automtation/
 │ │                         └── Helperclasses/
 │ │ └──                            └── BrowserFactory.java
 │ │ └──                     └── Page Classes/
@@ -48,7 +48,7 @@ playwright-java-framework/
 │ │ └──           └── log4j.xml
 │ ├── test/
 │ │ └── java/
-│ │ └── └── com.dpworld.automation.e2e/
+│ │ └── └── com.company.automation.e2e/
 │ │ └──                 └── Login/
 │ │ └──                     └── LoginTest.java
 │ │ └── Resources/
@@ -96,18 +96,18 @@ TODO: Guide users through getting your code up and running on their own system. 
 - Open intellij terminal and hit command
 
 ```bash
- git clone https://dpwhocargoes@dev.azure.com/dpwhocargoes/Cargoes%20Customs%20CR/\_git/CustomsUI-Automation
+ git clone https://github.com/zeeshan708/playwright-with-java.git
 ```
 
-- Switch to master branch using
+- Switch to main branch using if not in main branch
 
 ```bash
-git checkout master
+git checkout main
 ```
 
 # Build and Test
 
-- To build the project usinsg command
+- To build the project using command
 
 ```bash
    gradlew build
